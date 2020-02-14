@@ -33,12 +33,6 @@ export default class App extends Component {
     }
   }
 
-  changeStateData = () => {
-    this.setState(
-      {userName: this.state.userName === "Stjepan" ? "Dinosaur" : "Stjepan"}
-      )
-  }
-
   render()
   {
     return(
