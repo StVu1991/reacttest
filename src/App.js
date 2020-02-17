@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import{ToDoBanner} from "./ToDoBanner"
+import{ToDoCreator} from "./ToDoCreator"
+import{ToDoRow} from "./ToDoRow"
 
 //Adding Dynamic Data to our react App
 export default class App extends Component {
@@ -14,7 +17,6 @@ export default class App extends Component {
         {action:"Do workout", done:true},
         {action:"Study React", done:false},
         {action:"Call a friend", done:true}],
-        newToDoItemText:" "
     }
   }
 
@@ -22,25 +24,29 @@ export default class App extends Component {
     this.setState({newToDoItemText : event.target.value});
   }
 
-  createNewToDoTask = () => 
+  createNewToDo = (task) => 
   {
-    if (!this.state.todoItems.find(item => item.action === this.state.newToDoItemText))
+    if (!this.state.todoItems.find(item => item.action === task))
     {
       this.setState ({
         todoItems :  [...this.state.todoItems,
-            {action : this.state.newToDoItemText, done: false}], newToDoItemText : ""
+            {action : task, done: false}]
       });
     }
   }
 
-  render()
-  {
-    return(
+  toggleToDo = (todo) => this.setState ({
+    todoItems : this.state.todoItems.map(item => item.action === todo.action ? {...item, done:!item.done} : item )}
+    );
+
+  toDoTableRows = () => this.state.todoItems.map( item => 
+                        <ToDoRow key={item.action}  item={item} callback={this.toggleToDo}></ToDoRow>
+                          );
+
+  render = () =>
       <div>
-        <h4 className="bg-primary text-white text-center p-2">
-          {this.state.userName} Todo List
-          ({this.state.todoItems.filter(t => !t.done).length}) items to do
-        </h4>
+
+          <ToDoBanner name={this.state.userName}></ToDoBanner>
 
           <div className = "container-fluid">
             <div className="m-1">
@@ -49,8 +55,25 @@ export default class App extends Component {
                 Add a new task
               </button>
             </div>
+
+
+            <table className="table table-striper table-bordered">
+              <thead>
+                <tr>
+                  <th>
+                    ToDo Task Name
+                  </th>
+                  <th>
+                    Done
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.toDoTableRows()}
+              </tbody>
+            </table>
+
           </div>
       </div>
-    );
-  }
+
 }
